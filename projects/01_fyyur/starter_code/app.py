@@ -322,16 +322,16 @@ def edit_artist_submission(artist_id):
   data = request.form
   artist = Artist.query.get(artist_id)
   try:
-    artist.name = data.get("name"),
-    artist.city = data.get("city"),
-    artist.state = data.get("state"),
-    artist.phone = data.get("phone"),
-    artist.image_link = data.get("image_link"),
-    artist.genres = data.getlist("genres"),
-    artist.website = data.get("website"),
-    artist.facebook_link = data.get("facebook_link"),
-    artist.seeking_venue = True if data.get("seeking_venue") else False,
-    artist.seeking_description = data.get("seeking_description"),
+    artist.name = data.get("name")
+    artist.city = data.get("city")
+    artist.state = data.get("state")
+    artist.phone = data.get("phone")
+    artist.image_link = data.get("image_link")
+    artist.genres = data.getlist("genres")
+    artist.website = data.get("website")
+    artist.facebook_link = data.get("facebook_link")
+    artist.seeking_venue = True if data.get("seeking_venue") else False
+    artist.seeking_description = data.get("seeking_description")
     db.session.commit()
   except:
     db.session.rollback()
@@ -371,17 +371,17 @@ def edit_venue_submission(venue_id):
   data = request.form
   venue = Venue.query.get(venue_id)
   try:
-    venue.name = data.get("name"),
-    venue.city = data.get("city"),
-    venue.state = data.get("state"),
-    venue.address = data.get("address"),
-    venue.phone = data.get("phone"),
-    venue.image_link = data.get("image_link"),
-    venue.genres = data.getlist("genres"),
-    venue.website = data.get("website"),
-    venue.facebook_link = data.get("facebook_link"),
-    venue.seeking_talent = True if data.get("seeking_talent") else False,
-    venue.seeking_description = data.get("seeking_description"),
+    venue.name = data.get("name")
+    venue.city = data.get("city")
+    venue.state = data.get("state")
+    venue.address = data.get("address")
+    venue.phone = data.get("phone")
+    venue.image_link = data.get("image_link")
+    venue.genres = data.getlist("genres")
+    venue.website = data.get("website")
+    venue.facebook_link = data.get("facebook_link")
+    venue.seeking_talent = True if data.get("seeking_talent") else False
+    venue.seeking_description = data.get("seeking_description")
     db.session.commit()
   except:
     db.session.rollback()

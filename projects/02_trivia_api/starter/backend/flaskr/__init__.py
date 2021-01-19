@@ -62,22 +62,6 @@ def create_app(test_config=None):
         return response
 
     # Error handlers
-    @app.errorhandler(404)
-    def not_found(error):
-        return jsonify({
-            "success": False,
-            "error": 404,
-            "message": "Not found"
-        }), 404
-
-    @app.errorhandler(422)
-    def unprocessable(error):
-        return jsonify({
-            "success": False,
-            "error": 422,
-            "message": "Unprocessable request"
-        }), 422
-
     @app.errorhandler(400)
     def bad_request(error):
         return jsonify({
@@ -86,6 +70,14 @@ def create_app(test_config=None):
             "message": "Bad request"
         }), 400
 
+    @app.errorhandler(404)
+    def not_found(error):
+        return jsonify({
+            "success": False,
+            "error": 404,
+            "message": "Not found"
+        }), 404
+
     @app.errorhandler(405)
     def method_not_allowed(error):
         return jsonify({
@@ -93,6 +85,14 @@ def create_app(test_config=None):
             "error": 405,
             "message": "Method not allowed"
         }), 405
+
+    @app.errorhandler(422)
+    def unprocessable(error):
+        return jsonify({
+            "success": False,
+            "error": 422,
+            "message": "Unprocessable request"
+        }), 422
 
     # Routes
     @app.route("/categories")
@@ -133,15 +133,6 @@ def create_app(test_config=None):
 
         return jsonify(questions_data)
 
-    @app.route("/questions/<int:question_id>", methods=["DELETE"])
-    def delete_book(question_id):
-        question = Question.query.filter(
-            Question.id == question_id
-        ).first_or_404()
-        question.delete()
-
-        return jsonify({"success": True})
-
     @app.route("/questions", methods=["POST"])
     def add_new_question():
         form_data = request.get_json()
@@ -162,6 +153,15 @@ def create_app(test_config=None):
         return jsonify({
             "success": True
         })
+
+    @app.route("/questions/<int:question_id>", methods=["DELETE"])
+    def delete_book(question_id):
+        question = Question.query.filter(
+            Question.id == question_id
+        ).first_or_404()
+        question.delete()
+
+        return jsonify({"success": True})
 
     @app.route("/questions/search", methods=["POST"])
     def search_questions():

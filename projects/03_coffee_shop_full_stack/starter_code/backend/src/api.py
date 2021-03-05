@@ -1,6 +1,4 @@
-import os
-from flask import Flask, request, jsonify, abort
-from sqlalchemy import exc
+from flask import Flask, request, jsonify
 import json
 from flask_cors import CORS
 
@@ -13,23 +11,26 @@ CORS(app, resources={r"/*": {"origins": "*"}})
 
 db_drop_and_create_all()
 
-## ROUTES
+
+# ROUTES
 @app.route("/drinks", methods=["GET"])
 def get_drinks():
     drinks = Drink.query.all()
-    return {
+    return jsonify({
         "success": True,
         "drinks": [drink.short() for drink in drinks]
-    }
+    })
+
 
 @app.route("/drinks-detail", methods=["GET"])
 @requires_auth("get:drinks-detail")
 def get_drinks_detail(token):
     drinks = Drink.query.all()
-    return {
+    return jsonify({
         "success": True,
         "drinks": [drink.long() for drink in drinks]
-    }
+    })
+
 
 @app.route("/drinks", methods=["POST"])
 @requires_auth("post:drinks")
@@ -40,10 +41,11 @@ def post_drinks(token):
         recipe=json.dumps(drink_data.get("recipe")),
     )
     drink.insert()
-    return {
+    return jsonify({
         "success": True,
         "drinks": [drink.long()],
-    }
+    })
+
 
 @app.route("/drinks/<int:id>", methods=["PATCH"])
 @requires_auth("patch:drinks")
@@ -53,22 +55,24 @@ def patch_drinks(token, id):
     drink.title = drink_data.get("title")
     drink.recipe = json.dumps(drink_data.get("recipe"))
     drink.update()
-    return {
+    return jsonify({
         "success": True,
         "drinks": [drink.long()],
-    }
+    })
+
 
 @app.route("/drinks/<int:id>", methods=["DELETE"])
 @requires_auth("delete:drinks")
 def delete_drinks(token, id):
     drink = Drink.query.filter(Drink.id == id).first_or_404()
     drink.delete()
-    return {
+    return jsonify({
         "success": True,
         "delete": drink.id,
-    }
+    })
 
-## Error Handling
+
+# Error Handling
 @app.errorhandler(422)
 def unprocessable(error):
     return jsonify({
@@ -77,6 +81,7 @@ def unprocessable(error):
         "message": "Unprocessable"
         }), 422
 
+
 @app.errorhandler(404)
 def not_found(error):
     return jsonify({
@@ -84,6 +89,7 @@ def not_found(error):
         "error": 404,
         "message": "Resource not found"
         }), 404
+
 
 @app.errorhandler(AuthError)
 def auth_error(error):
